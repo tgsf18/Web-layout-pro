@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Mks Moda</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+   
+
+    <header>
+        <h1>Bem-vindo ao Keiko´s</h1>
+        <input type="text" id="search" placeholder="Pesquisar..." onkeyup="buscarProduto()">
+        <img src="file:///C:/Users/Senai/Downloads/Black%20friday%20eletr%C3%B4nicos%20fotogr%C3%A1fico%20azul%20preto%20banner%20para%20site%20(1).png" alt="Banner da loja">
+    </header>
+    <header>
+        <div class="slide-container">
+            <span id="slider-image1"></span>
+            <span id="slider-image2"></span>
+            <span id="reset-target"></span>
+            <div class="image-container">
+                <img src="file:///C:/Users/Senai/Downloads/Design%20sem%20nome.png" class="slider-image">
+                <img src="file:///C:/Users/Senai/Downloads/Design%20sem%20nome%20(1).png" class="slider-image">
+            </div>
+
+        </div>
+    </header>
+    <section class="colecao">
+        <h2>Coleção Lucca Mks</h2>
+        <div class="produto">
+            <img src="file:///C:/Users/Senai/Downloads/Design%20sem%20nome.png" alt="Produto">
+           
+        </div>
+    </section>
+
+
+
+    <section class="colecao">
+        <h2>Coleção Tgzada</h2>
+        <div class="produto">
+            <img src="file:///C:/Users/Senai/Downloads/Design%20sem%20nome%20(1).png" alt="Tênis esportivo">
+            
+        </div>
+    </section>
+    
+    <div id="carrinho">
+        <h2>🛒 Seu Carrinho</h2>
+    </div>
+    
+
+    <script>
+        function abrirCategoria(pagina) {
+            window.location.href = pagina; // Redireciona para a categoria escolhida
+        }
+    </script>  <button onclick="abrirCategoria('camisetas.html')">Vestuário</button>
+</body>
+</html>
+
