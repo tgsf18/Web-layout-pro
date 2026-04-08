@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insumos | Conliz</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+
+    <button class="nav-toggle">
+      <span class="hamburger"></span>
+    </button>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="admin-portfolio.html" class="nav-link">Painel Admin</a></li>
+        <li><a href="index.html" class="nav-link">Site</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container insumos-page">
+
+  <h1 class="section-title">Planilha de Insumos</h1>
+
+  <div class="filter-bar">
+    <button class="btn btn-primary" onclick="addRow()">+ Novo</button>
+    <button class="btn btn-secondary" onclick="window.print()">Imprimir</button>
+    <button class="btn btn-outline" onclick="clearAll()">Limpar</button>
+  </div>
+
+  <input 
+    type="text" 
+    id="tableSearch" 
+    class="table-input"
+    placeholder="Buscar material..." 
+    onkeyup="filterTable()"
+  >
+
+  <div class="table-wrapper">
+    <table class="table insumos-table">
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Qtd</th>
+          <th>Preço</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="insumosBody"></tbody>
+    </table>
+  </div>
+
+  <div class="insumos-total-bar">
+    <p class="insumos-total-label">Total geral</p>
+    <h2 class="insumos-total-value" id="grandTotal">R$ 0,00</h2>
+  </div>
+
+  
+
+</main>
+
+<script src="insumos.js"></script>
+<script>
+  const user = localStorage.getItem('conliz_user');
+  if (!user) { window.location.href = 'login.html'; }
+</script>
+</body>
+</html>

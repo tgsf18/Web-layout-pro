@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="admin-portfolio">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portfólio | Conliz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz Admin</a>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Voltar ao Site</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container text-center" style="max-width: 800px;">
+      <h1 class="section-title" style="margin-bottom: 0.5rem;">Bem-vindo, Administrador</h1>
+      <p style="color: var(--muted); margin-bottom: 3rem;">Painel de controle do site Conliz.</p>
+
+      <div class="cards-grid card-grid-3">
+        <a href="admin-portfolio-list.html" class="card cta-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3 style="color: white; margin-bottom: 0.5rem;">Gerenciar Portfólio</h3>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Visualizar, adicionar ou excluir projetos.</p>
+        </a>
+
+        <a href="funcionarios.html" class="card surface-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3 style="color: var(--accent);">Funcionários (RH)</h3>
+          <p style="font-size: 0.9rem;">Gestão de contratos e equipe.</p>
+        </a>
+
+        <a href="insumos.html" class="card surface-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3 style="color: var(--accent);">Gestão de Insumos</h3>
+          <p style="font-size: 0.9rem;">Tabela de controle de materiais.</p>
+        </a>
+
+        <a href="orcamento.html" class="card surface-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3 style="color: var(--accent);">Novo Orçamento</h3>
+          <p style="font-size: 0.9rem;">Gerar propostas e PDF.</p>
+        </a>
+
+        <a href="materiais.html" class="card surface-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3 style="color: var(--accent);">Calculadora</h3>
+          <p style="font-size: 0.9rem;">Estimativa de materiais.</p>
+        </a>
+
+        <a href="portfolio.html" class="card surface-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3>Ver Site Online</h3>
+          <p style="font-size: 0.9rem;">Acessar o portfólio como visitante.</p>
+        </a>
+
+        <a href="#" onclick="Conliz.logout();" class="card surface-card" style="text-decoration: none; transition: transform 0.2s;">
+          <h3 style="color: var(--danger);">Sair</h3>
+          <p style="font-size: 0.9rem;">Fazer logout do sistema.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container" style="text-align: center;">
+    <p>© Conliz Engenharia - Área Administrativa</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  // Verificação simples de segurança
+  const user = localStorage.getItem('conliz_user');
+  if (!user) {
+    alert('Você precisa estar logado para acessar esta página.');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

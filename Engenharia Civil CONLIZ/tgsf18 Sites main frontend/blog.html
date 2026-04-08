@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="blog">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog T&eacute;cnico | Conliz Engenharia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+
+    <button class="nav-toggle" aria-label="Abrir menu">
+      <span class="hamburger"></span>
+    </button>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+        <li><a href="portfolio.html" class="nav-link">Portfólio</a></li>
+        <li><a href="blog.html" class="nav-link">Blog</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Blog T&eacute;cnico</h1>
+        <p>
+          Conteudo tecnico para engenheiros, arquitetos e clientes: normas ABNT, sustentabilidade e
+          tendencias na construcao.
+        </p>
+
+        <div class="filter-bar" role="toolbar" aria-label="Filtrar artigos">
+          <button type="button" class="filter-chip is-active" data-filter-target=".blog-grid" data-filter="all">Todos</button>
+          <button type="button" class="filter-chip" data-filter-target=".blog-grid" data-filter="normas">Normas</button>
+          <button type="button" class="filter-chip" data-filter-target=".blog-grid" data-filter="sustentabilidade">Sustentabilidade</button>
+          <button type="button" class="filter-chip" data-filter-target=".blog-grid" data-filter="custos">Custos</button>
+        </div>
+
+        <div class="cards-grid blog-grid">
+          <article class="card media-card blog-card" data-category="normas">
+            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80" alt="Profissionais revisando plantas tecnicas" loading="lazy" decoding="async" />
+            <div class="media-card-body">
+              <span class="pill">Normas</span>
+              <h3>Como aplicar a NBR 15575 em reformas residenciais</h3>
+              <p>Entenda os principais pontos da norma de desempenho e como ela impacta a seguranca da obra.</p>
+            </div>
+          </article>
+          <article class="card media-card blog-card" data-category="sustentabilidade">
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt="Ambiente de projeto com materiais sustentaveis" loading="lazy" decoding="async" />
+            <div class="media-card-body">
+              <span class="pill">Sustentabilidade</span>
+              <h3>Materiais sustentaveis: o que considerar na escolha</h3>
+              <p>Saiba quais materiais reduzem o impacto ambiental sem comprometer durabilidade e desempenho.</p>
+            </div>
+          </article>
+          <article class="card media-card blog-card" data-category="custos">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80" alt="Analise de custos e planilhas da obra" loading="lazy" decoding="async" />
+            <div class="media-card-body">
+              <span class="pill">Custos</span>
+              <h3>Controle de custos: metricas para gerenciar o orcamento</h3>
+              <p>Veja praticas simples de monitoramento para evitar estouros e manter a obra no prazo.</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="form-note">
+          Esse blog apoia o posicionamento tecnico da Conliz e ajuda clientes a tomarem decisoes mais seguras.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Conliz Engenharia</h3>
+        <p>
+          Engenharia civil de alto padr&atilde;o com foco em qualidade t&eacute;cnica, sustentabilidade e
+          entrega no prazo.
+        </p>
+      </div>
+      <div>
+        <h4>Links R&aacute;pidos</h4>
+        <ul class="footer-links">
+          <li><a href="sobre.html">Sobre N&oacute;s</a></li>
+          <li><a href="orcamento.html">Or&ccedil;amento</a></li>
+          <li><a href="materiais.html">Calculadora</a></li>
+          <li><a href="insumos.html">Insumos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>Email: contato@conliz.com.br</p>
+        <p>Telefone: +55 (11) 4000-0000</p>
+        <p>S&atilde;o Paulo, SP</p>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <p>&copy; <span id="currentYear"></span> Conliz Engenharia. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

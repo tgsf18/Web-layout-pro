@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="admin-portfolio">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Novo Projeto | Conliz Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz Admin</a>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="admin-portfolio.html" class="nav-link">Painel</a></li>
+        <li><a href="admin-portfolio-list.html" class="nav-link">Gerenciar Cards</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container" style="max-width: 600px;">
+      <h1 class="section-title">Adicionar Projeto ao Portfólio</h1>
+      <p>Preencha os dados abaixo para adicionar um novo card.</p>
+
+      <form id="adminPortfolioForm" class="form card" style="padding: 2rem;">
+        
+        <div class="input-group">
+          <label for="titulo">Título do Projeto</label>
+          <input type="text" id="titulo" name="titulo" required placeholder="Ex: Casa Jardim América">
+        </div>
+
+        <div class="input-group">
+          <label for="categoria">Categoria</label>
+          <select id="categoria" name="categoria" required>
+            <option value="">Selecione...</option>
+            <option value="Residencial">Residencial</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Industrial">Industrial</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="imagem_url">URL da Imagem</label>
+          <input type="url" id="imagem_url" name="imagem_url" required placeholder="https://exemplo.com/foto.jpg">
+          <small class="field-hint">Cole o link direto da imagem (Unsplash, Imgur, etc).</small>
+        </div>
+
+        <div class="input-group">
+          <label for="descricao">Descrição Curta</label>
+          <textarea id="descricao" name="descricao" rows="2" placeholder="Ex: Reforma completa de alto padrão... (Aparece no card)"></textarea>
+        </div>
+
+        <div class="input-group">
+          <label for="descricao_detalhada">Descrição da Galeria (Detalhada)</label>
+          <textarea id="descricao_detalhada" name="descricao_detalhada" rows="5" placeholder="Descrição completa sobre o projeto, desafios, soluções... (Aparece na página de detalhes)"></textarea>
+        </div>
+
+        <div class="input-group">
+          <label for="galeria_urls">URLs da Galeria (uma por linha)</label>
+          <textarea id="galeria_urls" name="galeria_urls" rows="4" placeholder="https://exemplo.com/foto1.jpg&#10;https://exemplo.com/foto2.jpg"></textarea>
+          <small class="field-hint">Cole os links das imagens adicionais que aparecerão na página de detalhes.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Adicionar Card</button>
+        
+        <div id="adminMessage" style="margin-top: 1rem; text-align: center; font-weight: bold;"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="admin-portfolio-list">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciar Portfólio | Conliz Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz Admin</a>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="admin-portfolio.html" class="nav-link">Painel</a></li>
+        <li><a href="portfolio.html" class="nav-link">Ver Portfólio</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 class="section-title" style="margin-bottom: 0;">Gerenciar Projetos</h1>
+        <a href="admin-portfolio-form.html" class="btn btn-primary">Novo Card</a>
+      </div>
+      
+      <div class="cards-grid portfolio-gallery" id="adminPortfolioGallery"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container" style="text-align: center;">
+    <p>© Conliz Engenharia - Área Administrativa</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const user = localStorage.getItem('conliz_user');
+  if (!user) { window.location.href = 'login.html'; }
+</script>
+</body>
+</html>

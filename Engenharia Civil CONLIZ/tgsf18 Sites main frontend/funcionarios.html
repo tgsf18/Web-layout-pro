@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="funcionarios">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestão de Funcionários | Conliz Engenharia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+    <button class="nav-toggle" aria-label="Abrir menu">
+      <span class="hamburger"></span>
+    </button>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="admin-portfolio.html" class="nav-link admin-link-highlight">Painel Admin</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      
+      <div style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <p class="eyebrow">Recursos Humanos</p>
+          <h1 class="section-title" style="margin-bottom: 0.5rem;">Gestão de Funcionários</h1>
+          <p style="color: var(--muted);">Controle de contratos, pagamentos e EPIs.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="btnExport" class="btn btn-outline" title="Baixar relatório em PDF">
+            <span>Relatório Diário</span>
+          </button>
+          <button id="btnAddEmployee" class="btn btn-primary">
+            <span>+ Novo Funcionário</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtros e Busca -->
+      <div class="card" style="padding: 1.25rem; margin-bottom: 1.5rem; background: var(--surface-strong);">
+        <div class="form-row" style="grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; align-items: center;">
+          <div class="input-group" style="margin: 0;">
+            <input type="text" id="filterSearch" placeholder="Buscar por nome ou CPF..." class="table-input" style="background: white;">
+          </div>
+          <div class="input-group" style="margin: 0;">
+            <select id="filterSite" class="table-input" style="background: white;">
+              <option value="all">Todas as Obras</option>
+              <!-- Obras carregadas via JS -->
+            </select>
+          </div>
+          <div class="input-group" style="margin: 0;">
+            <select id="filterRole" class="table-input" style="background: white;">
+              <option value="all">Todos Cargos</option>
+              <option value="Pedreiro">Pedreiro</option>
+              <option value="Servente">Servente</option>
+              <option value="Engenheiro">Engenheiro</option>
+              <option value="Mestre de Obra">Mestre de Obra</option>
+              <option value="Eletricista">Eletricista</option>
+            </select>
+          </div>
+          <div class="input-group" style="margin: 0;">
+            <select id="filterContract" class="table-input" style="background: white;">
+              <option value="all">Todos Contratos</option>
+              <option value="CLT">CLT</option>
+              <option value="PJ">PJ</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="table-wrapper card" style="padding: 0; overflow: hidden;">
+        <table class="table">
+          <thead style="background: #f8fafc;">
+            <tr>
+              <th>Colaborador</th>
+              <th>Cargo</th>
+              <th>Status</th>
+              <th>Contrato</th>
+              <th>Salário (Estimado)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="employeesTableBody">
+            <!-- Linhas geradas via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal de Cadastro/Edição -->
+<div class="modal-overlay" id="employeeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle" style="margin: 0;">Novo Funcionário</h3>
+      <button class="close-modal" onclick="EmployeeApp.closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="employeeForm">
+        <input type="hidden" name="id">
+        
+        <!-- Tabs Navegação -->
+        <div class="tab-group">
+          <button type="button" class="tab-btn active" onclick="EmployeeApp.switchTab('dados')">Dados Pessoais</button>
+          <button type="button" class="tab-btn" onclick="EmployeeApp.switchTab('contrato')">Contrato</button>
+          <button type="button" class="tab-btn" onclick="EmployeeApp.switchTab('financeiro')">Financeiro</button>
+          <button type="button" class="tab-btn" onclick="EmployeeApp.switchTab('seguranca')">Segurança</button>
+        </div>
+
+        <!-- Tab: Dados -->
+        <div id="tab-dados" class="tab-content active">
+          <div class="input-group">
+            <label>Nome Completo *</label>
+            <input type="text" name="name" required placeholder="Ex: João Silva">
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Cargo *</label>
+              <select name="role" required>
+                <option value="Pedreiro">Pedreiro</option>
+                <option value="Servente">Servente</option>
+                <option value="Engenheiro">Engenheiro</option>
+                <option value="Arquiteto">Arquiteto</option>
+                <option value="Mestre de Obra">Mestre de Obra</option>
+                <option value="Eletricista">Eletricista</option>
+                <option value="Encanador">Encanador</option>
+                <option value="Assistente">Assistente</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Status</label>
+              <select name="status">
+                <option value="active">Ativo</option>
+                <option value="inactive">Inativo</option>
+                <option value="vacation">Férias</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Contrato -->
+        <div id="tab-contrato" class="tab-content">
+          <div class="form-row">
+            <div class="input-group">
+              <label>Tipo Contrato</label>
+              <select name="contract_type">
+                <option value="CLT">CLT</option>
+                <option value="PJ">PJ</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Local da Obra</label>
+              <input type="text" name="site" placeholder="Ex: Residencial Morumbi">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Início</label>
+              <input type="date" name="start_date">
+            </div>
+            <div class="input-group">
+              <label>Término (Opcional)</label>
+              <input type="date" name="end_date">
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Financeiro -->
+        <div id="tab-financeiro" class="tab-content">
+          <div class="form-row">
+            <div class="input-group">
+              <label>Regime de Pagamento</label>
+              <select name="payment_type" id="paymentType">
+                <option value="monthly">Mensalista</option>
+                <option value="daily">Diarista</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Dia do Pagamento</label>
+              <input type="number" name="payment_day" min="1" max="31" value="5">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Salário Mensal (R$)</label>
+              <input type="number" name="salary_monthly" id="salaryMonthly" step="0.01">
+            </div>
+            <div class="input-group">
+              <label>Diária Calculada (R$)</label>
+              <input type="number" name="salary_daily" id="salaryDaily" step="0.01" readonly style="background: #f1f5f9;">
+            </div>
+          </div>
+          <div class="form-checkbox">
+            <input type="checkbox" name="productivity_bonus" id="prodBonus">
+            <label for="prodBonus">Elegível a Bônus de Produtividade</label>
+          </div>
+        </div>
+
+        <!-- Tab: Segurança -->
+        <div id="tab-seguranca" class="tab-content">
+          <div class="input-group">
+            <label>Contato de Emergência</label>
+            <input type="text" name="emergency_contact" placeholder="Nome e Telefone">
+          </div>
+          <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+            <p style="font-weight: bold; margin-bottom: 0.5rem;">Checklist EPIs Entregues:</p>
+            <div class="form-checkbox">
+              <input type="checkbox" name="epi_helmet" id="epi1"> <label for="epi1">Capacete</label>
+            </div>
+            <div class="form-checkbox">
+              <input type="checkbox" name="epi_boots" id="epi2"> <label for="epi2">Botas de Segurança</label>
+            </div>
+            <div class="form-checkbox">
+              <input type="checkbox" name="epi_gloves" id="epi3"> <label for="epi3">Luvas</label>
+            </div>
+            <div class="form-checkbox">
+              <input type="checkbox" name="epi_glasses" id="epi4"> <label for="epi4">Óculos de Proteção</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" style="color: #64748b; border: 1px solid #cbd5e1;" onclick="EmployeeApp.closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="EmployeeApp.saveEmployee()">Salvar Colaborador</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Visualização (Detalhes) -->
+<div class="modal-overlay" id="viewEmployeeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="margin: 0;">Ficha do Colaborador</h3>
+      <button class="close-modal" onclick="EmployeeApp.closeViewModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="viewEmployeeBody">
+      <!-- Conteúdo injetado via JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" style="color: #64748b; border: 1px solid #cbd5e1;" onclick="EmployeeApp.closeViewModal()">Fechar</button>
+      <button class="btn btn-primary" id="btnEditFromView">Editar Dados</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification (Reusing generic structure if available or creating simple one) -->
+<div id="toast" class="toast"></div>
+
+<footer class="site-footer">
+  <div class="container" style="text-align: center;">
+    <p>© Conliz Engenharia - Módulo de RH</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script src="script.js"></script>
+<script src="funcionarios.js"></script>
+<script>
+  // Check Auth
+  const user = localStorage.getItem('conliz_user');
+  if (!user) { window.location.href = 'login.html'; }
+</script>
+</body>
+</html>

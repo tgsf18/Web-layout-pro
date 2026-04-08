@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="portfolio">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfólio | Conliz Engenharia</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+
+    <button class="nav-toggle">
+      <span class="hamburger"></span>
+    </button>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="portfolio.html" class="nav-link active">Portfólio</a></li>
+        <li><a href="login.html" class="nav-link btn-ghost" style="padding: 0.5rem 1rem; border-radius: 99px;">Login</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="section">
+  <div class="container">
+
+    <h1 class="section-title">Portfólio Interativo</h1>
+
+    <!-- SLIDER -->
+    <div class="slider-wrapper">
+      <div class="slider-images">
+        <img src="https://images.unsplash.com/photo-1505842465776-3a3987a40af9?auto=format&fit=crop&w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1526401485004-1a9a4f7d15d7?auto=format&fit=crop&w=1200&q=80">
+      </div>
+    </div>
+
+    <div class="slider-controls">
+      <input id="portfolioRange" type="range" min="0" max="100" value="0" />
+    </div>
+
+    <!-- FILTRO -->
+    <div class="filter-bar">
+      <button type="button" class="filter-chip is-active" data-filter-target=".portfolio-gallery" data-filter="all">Todas</button>
+      <button type="button" class="filter-chip" data-filter-target=".portfolio-gallery" data-filter="residencial">Residencial</button>
+      <button type="button" class="filter-chip" data-filter-target=".portfolio-gallery" data-filter="comercial">Comercial</button>
+      <button type="button" class="filter-chip" data-filter-target=".portfolio-gallery" data-filter="industrial">Industrial</button>
+    </div>
+
+    <!-- CARDS -->
+    <div class="cards-grid portfolio-gallery">
+      <!-- Os itens serão carregados via JavaScript do Backend -->
+      <p style="grid-column: 1/-1; text-align: center; color: #666;">Carregando projetos...</p>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

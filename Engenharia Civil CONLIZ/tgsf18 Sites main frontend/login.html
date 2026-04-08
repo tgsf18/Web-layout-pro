@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="login">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Conliz Engenharia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .login-container { max-width: 420px; margin: 4rem auto; padding: 2rem; background: #fff; border-radius: var(--radius); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
+    .login-header { text-align: center; margin-bottom: 2rem; }
+    .login-header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; color: #0f172a; }
+    .auth-toggle { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #64748b; }
+    .auth-toggle a { color: var(--accent); font-weight: 600; cursor: pointer; text-decoration: none; }
+    .auth-toggle a:hover { text-decoration: underline; }
+    .hide { display: none; }
+    .spinner { display: inline-block; width: 1rem; height: 1rem; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; margin-left: 0.5rem; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .message-box { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; text-align: center; background: #fee2e2; color: #b91c1c; }
+    .message-box:empty { display: none; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      
+      <!-- FORMULÁRIO DE LOGIN -->
+      <div id="loginForm" class="login-container">
+        <div class="login-header">
+          <h1>Bem-vindo de volta</h1>
+          <p>Acesse sua conta para gerenciar seus projetos.</p>
+        </div>
+        <form>
+          <div class="input-group">
+            <label for="usuario">Email ou Usuário</label>
+            <input type="text" id="usuario" name="usuario" required placeholder="admin" value="admin">
+          </div>
+          <div class="input-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required placeholder="conliz123" value="conliz123">
+          </div>
+          <div class="form-checkbox">
+            <input type="checkbox" id="togglePasswordLogin">
+            <label for="togglePasswordLogin" style="font-size: 0.85rem;">Mostrar senha</label>
+          </div>
+          <button type="submit" id="loginSubmit" class="btn btn-primary" style="width: 100%;">
+            Entrar <span id="loginSpinner" class="spinner hide"></span>
+          </button>
+          <div id="loginMessage"></div>
+        </form>
+        <div class="auth-toggle">
+          Não tem uma conta? <a id="showRegister">Cadastre-se</a>
+        </div>
+        <div class="auth-toggle" style="margin-top: 0.5rem;">
+          <small>Demo: <strong>admin</strong> / <strong>conliz123</strong></small>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO DE CADASTRO -->
+      <div id="registerForm" class="login-container hide">
+        <div class="login-header">
+          <h1>Criar Conta</h1>
+          <p>Junte-se a nós para acompanhar sua obra.</p>
+        </div>
+        <form>
+          <div class="input-group">
+            <label for="regNome">Nome Completo</label>
+            <input type="text" id="regNome" name="nome" required placeholder="Seu nome">
+          </div>
+          <div class="input-group">
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" name="email" required placeholder="seu@email.com">
+          </div>
+          <div class="input-group">
+            <label for="regUser">Usuário</label>
+            <input type="text" id="regUser" name="usuario" required placeholder="usuario_exemplo">
+          </div>
+          <div class="input-group">
+            <label for="regSenha">Senha</label>
+            <input type="password" id="regSenha" name="senha" required placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="input-group">
+            <label for="regSenhaConfirm">Confirmar Senha</label>
+            <input type="password" id="regSenhaConfirm" name="senhaConfirm" required placeholder="Repita a senha">
+          </div>
+          <div class="form-checkbox">
+            <input type="checkbox" id="togglePasswordRegister">
+            <label for="togglePasswordRegister" style="font-size: 0.85rem;">Mostrar senhas</label>
+          </div>
+          <button type="submit" id="registerSubmit" class="btn btn-primary" style="width: 100%;">
+            Cadastrar <span id="registerSpinner" class="spinner hide"></span>
+          </button>
+          <div id="registerMessage"></div>
+        </form>
+        <div class="auth-toggle">
+          Já tem uma conta? <a id="showLogin">Fazer Login</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container" style="text-align: center;">
+    <p>© Conliz Engenharia</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

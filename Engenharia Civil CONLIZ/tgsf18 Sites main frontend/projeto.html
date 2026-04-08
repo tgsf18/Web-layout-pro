@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="projeto-detalhe">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalhes do Projeto | Conliz Engenharia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .project-header { margin-bottom: 2rem; }
+    .project-meta { color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; display: block; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.05em; }
+    .project-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .project-gallery-grid img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .project-gallery-grid img:hover { transform: scale(1.02); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="portfolio.html" class="nav-link">Voltar ao Portfólio</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="project-header">
+        <span id="projectCategory" class="project-meta">Categoria</span>
+        <h1 id="projectTitle" class="section-title" style="font-size: 2.5rem; margin-bottom: 1rem;">Carregando...</h1>
+        <p id="projectDesc" style="max-width: 800px; line-height: 1.8; color: #4a5a73; font-size: 1.1rem;"></p>
+      </div>
+
+      <div id="projectGallery" class="project-gallery-grid">
+        <!-- Imagens serão carregadas aqui -->
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-copy"><p>&copy; Conliz Engenharia</p></div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

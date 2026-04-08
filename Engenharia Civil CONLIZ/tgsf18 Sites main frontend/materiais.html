@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-page="materiais">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Materiais | Conliz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">Conliz</a>
+
+    <button class="nav-toggle" aria-label="Abrir menu">
+      <span class="hamburger"></span>
+    </button>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="admin-portfolio.html" class="nav-link">Painel Admin</a></li>
+        <li><a href="index.html" class="nav-link">Site</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Calculadora de Materiais</h1>
+        <p>
+          Use essa ferramenta para obter uma estimativa r&aacute;pida de materiais b&aacute;sicos.
+          Recomendamos sempre confirmar quantidades com seu engenheiro ou mestre de obras.
+        </p>
+
+        <form id="calculatorForm" class="form form-shell calculator-shell" novalidate>
+          <div class="cards-grid calculator-grid">
+            <section class="card surface-card budget-card">
+              <h2 class="card-title">Dados da superf&iacute;cie</h2>
+              <div class="input-group">
+                <label for="area">Area a ser revestida / construida</label>
+                <input id="area" name="area" type="text" inputmode="decimal" required placeholder="Ex: 45 m²" data-mask="m2" data-unit="m²" data-validate="positive-number" />
+                <small class="field-hint">Informe a metragem util para o calculo.</small>
+              </div>
+              <div class="input-group">
+                <label for="consumo">Consumo medio de argamassa</label>
+                <input id="consumo" name="consumo" type="text" inputmode="decimal" required placeholder="Ex: 18 kg" data-mask="kg" data-unit="kg" data-validate="positive-number" />
+                <small class="field-hint">Valor de referencia por area aplicada.</small>
+              </div>
+            </section>
+
+            <section class="card surface-card budget-card">
+              <h2 class="card-title">Ajustes de obra</h2>
+              <div class="input-group">
+                <label for="litros">Agua por saco de cimento</label>
+                <input id="litros" name="litros" type="text" inputmode="decimal" required placeholder="Ex: 6 litros" data-mask="litros" data-unit="litros" data-validate="positive-number" />
+                <small class="field-hint">Base para estimar a agua do preparo.</small>
+              </div>
+              <div class="input-group">
+                <label for="reserva">Margem de seguranca</label>
+                <input id="reserva" name="reserva" type="text" inputmode="decimal" placeholder="Ex: 10 %" data-mask="percent" data-unit="%" data-validate="non-negative-number" />
+                <small class="field-hint">Use para cobrir perdas e recortes.</small>
+              </div>
+            </section>
+          </div>
+
+          <div class="budget-actions">
+            <button type="submit" class="btn btn-primary">Calcular materiais</button>
+          </div>
+          <div id="materialResult" class="result-panel" aria-live="polite"></div>
+        </form>
+
+        <p class="form-note">
+          Esta calculadora oferece uma estimativa inicial. Para or&ccedil;amento preciso, use o formul&aacute;rio
+          de or&ccedil;amentos ou fale com o nosso time t&eacute;cnico.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Conliz Engenharia</h3>
+        <p>
+          Engenharia civil de alto padr&atilde;o com foco em qualidade t&eacute;cnica, sustentabilidade e
+          entrega no prazo.
+        </p>
+      </div>
+      <div>
+        <h4>Links R&aacute;pidos</h4>
+        <ul class="footer-links">
+          <li><a href="sobre.html">Sobre N&oacute;s</a></li>
+          <li><a href="orcamento.html">Or&ccedil;amento</a></li>
+          <li><a href="materiais.html">Calculadora</a></li>
+          <li><a href="insumos.html">Insumos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>Email: contato@conliz.com.br</p>
+        <p>Telefone: +55 (11) 4000-0000</p>
+        <p>S&atilde;o Paulo, SP</p>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <p>&copy; <span id="currentYear"></span> Conliz Engenharia. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const user = localStorage.getItem('conliz_user');
+    if (!user) { window.location.href = 'login.html'; }
+  </script>
+</body>
+</html>
