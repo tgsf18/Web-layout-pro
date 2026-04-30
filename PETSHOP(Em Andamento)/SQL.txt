@@ -1,0 +1,1281 @@
+CREATE DATABASE IF NOT EXISTS petshop;
+
+
+⚠️ Dica importante:
+Depois que testar a primeira vez, mude no application.properties:
+
+properties
+# De:
+spring.jpa.hibernate.ddl-auto=create
+
+# Para:
+spring.jpa.hibernate.ddl-auto=update
+Assim os dados que você cadastrar não serão apagados toda vez que reiniciar o backend.
+
+
+---------------------------------------------------------------------------------------------
+
+INDEX
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="TG Petshop - Seu Pet Center Online. Ração, brinquedos, medicamentos e tudo para seu melhor amigo com os melhores preços.">
+    <meta property="og:title" content="TG Petshop - Seu Pet Center Online">
+    <meta property="og:description" content="Tudo para seu pet com CashPetz e ofertas especiais. Confira!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TG Petshop">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>TG Petshop - Seu Pet Center Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: 'rgba(var(--accent-rgb), <alpha-value>)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-sidebar: #f1f5f9;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-rgb: 0, 160, 228;
+            --border: rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode {
+            --bg-main: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --bg-sidebar: #0f0f0f;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .glass-card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        .product-card { transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-5px); border-color: rgb(var(--accent-rgb)); }
+        .price-font { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+        
+        input, select { background-color: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border) !important; transition: all 0.2s; border-radius: 12px !important; }
+        input:focus, select:focus { border-color: rgb(var(--accent-rgb)) !important; outline: none; box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.2); }
+        
+        .input-error { border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important; }
+        .error-message { color: #ef4444; font-size: 10px; margin-top: 4px; display: none; }
+        .error-message.visible { display: block; }
+        
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: rgb(var(--accent-rgb));
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast {
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        
+        #mobileMenu {
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- ========== TOP BAR ========== -->
+    <header style="background-color: var(--bg-card);" class="sticky top-0 z-50 border-b border-white/5 px-4 md:px-10 py-3 md:py-4 shadow-sm backdrop-blur-md">
+        <div class="container mx-auto flex items-center justify-between gap-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.reload()">
+                <div class="bg-accent p-2 rounded-2xl shadow-lg group-hover:rotate-12 transition-transform">
+                    <i data-lucide="dog" class="text-white w-5 h-5 md:w-6 md:h-6"></i>
+                </div>
+                <span class="text-lg md:text-2xl font-black tracking-tighter uppercase italic">TG<span class="text-accent">Petshop</span></span>
+            </div>
+
+            <!-- Barra de Pesquisa (desktop) -->
+            <div class="flex-1 max-w-xl relative hidden md:block">
+                <input type="text" id="searchInput" placeholder="O que seu pet precisa hoje?" 
+                    class="w-full rounded-2xl py-2.5 px-6 pl-12 text-sm" style="background-color: var(--bg-sidebar) !important;">
+                <i data-lucide="search" class="absolute left-4 top-2.5 text-gray-400 w-5 h-5"></i>
+            </div>
+
+            <!-- Ações (desktop) -->
+            <div class="hidden md:flex items-center gap-2 md:gap-6">
+                <nav class="flex items-center gap-4">
+                    <button onclick="toggleAdminModal()" class="flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                        <span class="text-[9px] font-bold uppercase mt-1">Categorias</span>
+                    </button>
+                    <button onclick="toggleProductAdminModal()" class="flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity">
+                        <i data-lucide="package" class="w-5 h-5"></i>
+                        <span class="text-[9px] font-bold uppercase mt-1">Produtos</span>
+                    </button>
+                </nav>
+
+                <div class="h-8 w-[1px] bg-black/10 dark:bg-white/10 mx-1"></div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-accent/5 rounded-full border border-accent/10">
+                        <button onclick="setAccent('124, 58, 237')" class="w-3.5 h-3.5 rounded-full bg-[#7c3aed]" title="Roxo"></button>
+                        <button onclick="setAccent('37, 99, 235')" class="w-3.5 h-3.5 rounded-full bg-[#2563eb]" title="Azul"></button>
+                        <button onclick="setAccent('16, 185, 129')" class="w-3.5 h-3.5 rounded-full bg-[#10b981]" title="Verde"></button>
+                    </div>
+                    <button onclick="toggleTheme()" class="p-2 rounded-xl hover:bg-accent/10 transition-colors" title="Alternar Tema">
+                        <i id="themeIcon" data-lucide="sun" class="w-5 h-5 text-accent"></i>
+                    </button>
+                    <div class="relative cursor-pointer flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity">
+                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        <span class="absolute -top-1.5 -right-1.5 bg-accent text-white text-[9px] font-bold px-1.5 rounded-full">0</span>
+                        <span class="text-[9px] font-bold uppercase mt-1">Carrinho</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Hamburguer (mobile) -->
+            <button id="hamburgerBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl hover:bg-accent/10 transition-colors relative z-50">
+                <i id="hamburgerIcon" data-lucide="menu" class="w-6 h-6 text-accent"></i>
+            </button>
+        </div>
+
+    </header>
+
+    <!-- Menu Mobile Overlay (fora do header) -->
+    <div id="mobileOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity duration-300" onclick="toggleMobileMenu()"></div>
+
+    <!-- Menu Mobile (fora do header) -->
+    <div id="mobileMenu" class="fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 transform translate-x-full transition-transform duration-300 ease-in-out" style="background-color: var(--bg-card);">
+        <div class="flex flex-col h-full p-6 pt-16">
+            <!-- Cabeçalho do menu -->
+            <div class="flex items-center justify-between mb-8">
+                <span class="text-lg font-black uppercase tracking-tighter" style="color: var(--text-main);">Menu</span>
+                <button onclick="toggleMobileMenu()" class="p-3 rounded-xl hover:bg-accent/10 transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+                <!-- Barra de Pesquisa (mobile) -->
+                <div class="relative mb-6">
+                    <input type="text" id="searchInputMobile" placeholder="Buscar produto..." 
+                        class="w-full rounded-xl py-3 px-4 pl-12 text-sm" style="background-color: var(--bg-sidebar) !important; color: var(--text-main) !important; border: 1px solid var(--border) !important;">
+                    <i data-lucide="search" class="absolute left-4 top-3 text-gray-400 w-5 h-5"></i>
+                </div>
+
+                <!-- Links de navegação -->
+                <nav class="flex flex-col gap-1 mb-8">
+                    <button onclick="toggleMobileMenu(); toggleAdminModal()" class="flex items-center gap-4 p-4 rounded-xl hover:bg-accent/10 transition-all text-left w-full">
+                        <div class="bg-accent/10 p-2 rounded-lg">
+                            <i data-lucide="layers" class="w-5 h-5 text-accent"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-sm block" style="color: var(--text-main);">Categorias</span>
+                            <span class="text-[10px] uppercase tracking-wider" style="color: var(--text-muted);">Gerenciar</span>
+                        </div>
+                    </button>
+                    
+                    <button onclick="toggleMobileMenu(); toggleProductAdminModal()" class="flex items-center gap-4 p-4 rounded-xl hover:bg-accent/10 transition-all text-left w-full">
+                        <div class="bg-accent/10 p-2 rounded-lg">
+                            <i data-lucide="package" class="w-5 h-5 text-accent"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-sm block" style="color: var(--text-main);">Produtos</span>
+                            <span class="text-[10px] uppercase tracking-wider" style="color: var(--text-muted);">Inventário</span>
+                        </div>
+                    </button>
+                    
+                    <div class="border-t my-2" style="border-color: var(--border);"></div>
+                    
+                    <a href="#" class="flex items-center gap-4 p-4 rounded-xl hover:bg-accent/10 transition-all text-left">
+                        <div class="bg-accent/10 p-2 rounded-lg">
+                            <i data-lucide="shopping-cart" class="w-5 h-5 text-accent"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-sm block" style="color: var(--text-main);">Carrinho</span>
+                            <span class="text-[10px] uppercase tracking-wider" style="color: var(--text-muted);">0 itens</span>
+                        </div>
+                    </a>
+                    
+                    <a href="#" class="flex items-center gap-4 p-4 rounded-xl hover:bg-accent/10 transition-all text-left">
+                        <div class="bg-accent/10 p-2 rounded-lg">
+                            <i data-lucide="heart" class="w-5 h-5 text-accent"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-sm block" style="color: var(--text-main);">Favoritos</span>
+                            <span class="text-[10px] uppercase tracking-wider" style="color: var(--text-muted);">Salvos</span>
+                        </div>
+                    </a>
+                </nav>
+
+                <!-- Controles de tema (mobile) -->
+                <div class="mt-auto border-t pt-6" style="border-color: var(--border);">
+                    <p class="text-[10px] font-bold uppercase tracking-widest mb-4" style="color: var(--text-muted);">Personalização</p>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-bold" style="color: var(--text-muted);">Tema</span>
+                        <button onclick="toggleTheme()" class="p-2 rounded-xl hover:bg-accent/10 transition-colors">
+                            <i id="themeIconMobile" data-lucide="sun" class="w-5 h-5 text-accent"></i>
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <span class="text-xs font-bold block mb-2" style="color: var(--text-muted);">Cor de Destaque</span>
+                        <div class="flex items-center gap-2 px-3 py-2 bg-accent/5 rounded-full border border-accent/10 w-fit">
+                            <button onclick="setAccent('124, 58, 237')" class="w-4 h-4 rounded-full bg-[#7c3aed]" title="Roxo"></button>
+                            <button onclick="setAccent('37, 99, 235')" class="w-4 h-4 rounded-full bg-[#2563eb]" title="Azul"></button>
+                            <button onclick="setAccent('16, 185, 129')" class="w-4 h-4 rounded-full bg-[#10b981]" title="Verde"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="flex-1 overflow-y-auto">
+        <div class="container mx-auto px-6 md:px-10 py-10">
+            <section class="mb-12">
+                <div id="quickLinksGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 md:gap-6"></div>
+            </section>
+
+            <!-- Hero -->
+            <section class="mb-16">
+                <div class="bg-accent/5 glass-card p-10 md:p-16 flex flex-col md:flex-row items-center justify-between relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-accent/10 blur-[100px] -mr-20 -mt-20 transition-colors duration-500"></div>
+                    <div class="z-10 text-center md:text-left">
+                        <span class="text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Ofertas Especiais</span>
+                        <h2 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tighter leading-tight">O melhor para seu <br><span class="text-accent italic">melhor amigo.</span></h2>
+                        <p style="color: var(--text-muted);" class="mb-8 max-w-md font-light leading-relaxed mx-auto md:mx-0">Tudo o que seu pet precisa com <span class="font-semibold text-accent underline decoration-accent/30">15% de CashPetz</span> em compras selecionadas.</p>
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                            <button class="bg-accent hover:opacity-90 text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-xl shadow-accent/20 text-xs uppercase tracking-widest">Ver Catálogo</button>
+                            <button class="bg-white/5 hover:bg-white/10 font-bold py-4 px-10 rounded-2xl transition-all text-xs uppercase tracking-widest border border-white/5">Assine e Ganhe</button>
+                        </div>
+                    </div>
+                    <div class="hidden lg:block relative group">
+                        <div class="absolute inset-0 bg-accent/20 blur-3xl rounded-full scale-150 animate-pulse"></div>
+                        <i data-lucide="paw-print" class="w-64 h-64 text-accent/20 rotate-12 group-hover:rotate-0 transition-transform duration-700 relative z-10"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filtros Avançados -->
+            <section class="mb-8">
+                <div class="glass-card p-4 md:p-6">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Filtros:</span>
+                        
+                        <select id="sortSelect" class="py-2 px-3 text-xs font-bold rounded-xl">
+                            <option value="default">Ordenar por</option>
+                            <option value="price-asc">Menor Preço</option>
+                            <option value="price-desc">Maior Preço</option>
+                            <option value="name-asc">Nome A-Z</option>
+                            <option value="name-desc">Nome Z-A</option>
+                            <option value="stock-desc">Maior Estoque</option>
+                        </select>
+                        
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="priceMin" placeholder="R$ Min" class="py-2 px-3 text-xs font-bold w-24 rounded-xl">
+                            <span class="text-gray-500">-</span>
+                            <input type="number" id="priceMax" placeholder="R$ Max" class="py-2 px-3 text-xs font-bold w-24 rounded-xl">
+                        </div>
+                        
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="promoOnly" class="rounded accent-accent">
+                            <span class="text-xs font-bold text-gray-400">Em promoção</span>
+                        </label>
+                        
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="inStockOnly" class="rounded accent-accent">
+                            <span class="text-xs font-bold text-gray-400">Em estoque</span>
+                        </label>
+                        
+                        <button onclick="applyFilters()" class="bg-accent text-white px-4 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-all">Aplicar</button>
+                        <button onclick="clearFilters()" class="bg-white/5 text-gray-400 px-4 py-2 rounded-xl text-xs font-bold hover:bg-white/10 transition-all">Limpar</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-20">
+                <div class="flex items-end justify-between mb-10 border-b border-white/5 pb-6">
+                    <div>
+                        <h3 class="text-3xl font-extrabold tracking-tight">Produtos <span class="text-accent">Destaque</span></h3>
+                        <p style="color: var(--text-muted);" class="text-sm mt-1">Qualidade premium selecionada para seu pet</p>
+                    </div>
+                </div>
+                <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="col-span-full py-20 text-center text-gray-600">
+                        <div class="spinner mx-auto mb-4"></div>
+                        <p>Buscando os melhores produtos...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ========== ADMIN MODAL - CATEGORIAS ========== -->
+    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-[#1a1a1a] rounded-[24px] w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-white/5">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold flex items-center gap-3"><i data-lucide="layers" class="text-accent"></i> Categorias</h2>
+                </div>
+                <button onclick="toggleAdminModal()" class="text-gray-500 hover:text-white transition-all">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="p-8 overflow-y-auto">
+                <form id="categoryForm" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 p-6 rounded-2xl bg-black/20 border border-white/5">
+                    <input type="hidden" id="categoryId">
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold uppercase mb-2 ml-1 tracking-widest text-gray-500">Nome *</label>
+                        <input type="text" id="categoryName" class="w-full p-3.5 rounded-xl text-sm font-medium" required>
+                        <span class="error-message" id="categoryNameError">Campo obrigatório</span>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 tracking-widest">Descrição</label>
+                        <input type="text" id="categoryDesc" class="w-full p-3.5 rounded-xl text-sm font-medium">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 tracking-widest">Ícone</label>
+                        <select id="categoryIcon" class="flex-1 p-3.5 rounded-xl text-sm font-bold appearance-none w-full">
+                            <option value="dog">Cachorro</option>
+                            <option value="cat">Gato</option>
+                            <option value="bird">Pássaro</option>
+                            <option value="fish">Peixe</option>
+                            <option value="heart">Saúde</option>
+                            <option value="package">Outros</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button type="submit" id="submitBtn" class="flex-1 bg-accent text-white font-bold py-3.5 rounded-xl hover:opacity-90 transition-all uppercase text-[10px] tracking-widest">
+                            <span id="submitBtnText">Salvar</span>
+                            <span id="submitBtnSpinner" class="spinner hidden" style="width:16px;height:16px;"></span>
+                        </button>
+                    </div>
+                </form>
+                <div class="overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-white/5 text-gray-500 text-[10px] uppercase font-black tracking-widest">
+                            <tr>
+                                <th class="py-5 px-8">ID</th>
+                                <th class="py-5 px-8">Categoria</th>
+                                <th class="py-5 px-8">Descrição</th>
+                                <th class="py-5 px-8">Ícone</th>
+                                <th class="py-5 px-8 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoryTableBody" class="text-sm divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ADMIN MODAL - PRODUTOS ========== -->
+    <div id="productAdminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-[#1a1a1a] rounded-[24px] w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-white/5">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold flex items-center gap-3"><i data-lucide="package" class="text-accent"></i> Inventário SaaS</h2>
+                </div>
+                <button onclick="toggleProductAdminModal()" class="text-gray-500 hover:text-white transition-all">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="p-8 overflow-y-auto">
+                <form id="productForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 p-6 rounded-2xl bg-black/20 border border-white/5">
+                    <input type="hidden" id="productId">
+                    <div class="md:col-span-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Produto *</label>
+                        <input type="text" id="productName" class="w-full p-3.5 rounded-xl text-sm" required>
+                        <span class="error-message" id="productNameError">Campo obrigatório</span>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Categoria *</label>
+                        <select id="productCategory" class="w-full p-3.5 rounded-xl text-sm" required></select>
+                        <span class="error-message" id="productCategoryError">Selecione uma categoria</span>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Estoque *</label>
+                        <input type="number" id="productStock" class="w-full p-3.5 rounded-xl text-sm" required min="0">
+                        <span class="error-message" id="productStockError">Campo obrigatório</span>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Preço Base *</label>
+                        <input type="number" step="0.01" id="productPrice" class="w-full p-3.5 rounded-xl text-sm" required min="0">
+                        <span class="error-message" id="productPriceError">Campo obrigatório</span>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Com Desconto *</label>
+                        <input type="number" step="0.01" id="productDiscountPrice" class="w-full p-3.5 rounded-xl text-sm" required min="0">
+                        <span class="error-message" id="productDiscountError">Campo obrigatório</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Imagem URL</label>
+                        <input type="text" id="productImage" class="w-full p-3.5 rounded-xl text-sm">
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button type="submit" id="productSubmitBtn" class="flex-1 bg-accent text-white font-bold py-3.5 rounded-xl uppercase text-[10px]">
+                            <span id="productSubmitBtnText">Salvar</span>
+                            <span id="productSubmitBtnSpinner" class="spinner hidden" style="width:16px;height:16px;"></span>
+                        </button>
+                    </div>
+                </form>
+                <div class="overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-white/5 text-gray-500 text-[10px] uppercase font-black tracking-widest">
+                            <tr>
+                                <th class="py-5 px-8">Produto</th>
+                                <th class="py-5 px-8">Categoria</th>
+                                <th class="py-5 px-8">Preço (Net)</th>
+                                <th class="py-5 px-8">Stock</th>
+                                <th class="py-5 px-8 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody" class="text-sm divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+    const API_URL = 'http://localhost:8080/api/categorias';
+    const API_URL_PRODUTOS = 'http://localhost:8080/api/produtos';
+    let allProducts = [];
+    lucide.createIcons();
+
+    // ===== UTILITÁRIOS =====
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast fixed bottom-5 right-5 px-6 py-3 rounded-xl text-white text-sm font-bold z-[200] ${
+            type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
+        }`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function showLoading(btnTextId, btnSpinnerId) {
+        document.getElementById(btnTextId).classList.add('hidden');
+        document.getElementById(btnSpinnerId).classList.remove('hidden');
+    }
+
+    function hideLoading(btnTextId, btnSpinnerId) {
+        document.getElementById(btnTextId).classList.remove('hidden');
+        document.getElementById(btnSpinnerId).classList.add('hidden');
+    }
+
+    function clearErrors() {
+        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        document.querySelectorAll('.error-message').forEach(el => el.classList.remove('visible'));
+    }
+
+    function showFieldError(inputId, errorId) {
+        document.getElementById(inputId).classList.add('input-error');
+        document.getElementById(errorId).classList.add('visible');
+    }
+
+    // ===== MENU MOBILE =====
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('mobileOverlay');
+        const hamburgerIcon = document.getElementById('hamburgerIcon');
+        
+        const isOpen = menu.classList.contains('translate-x-0');
+        
+        if (isOpen) {
+            menu.classList.remove('translate-x-0');
+            menu.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+            hamburgerIcon.setAttribute('data-lucide', 'menu');
+            // Liberar scroll do body
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+        } else {
+            menu.classList.remove('translate-x-full');
+            menu.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+            hamburgerIcon.setAttribute('data-lucide', 'x');
+            // Bloquear scroll do body
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        }
+        lucide.createIcons();
+    }
+
+    // ===== TEMA =====
+    function setAccent(rgb) {
+        document.documentElement.style.setProperty('--accent-rgb', rgb);
+        localStorage.setItem('petshop-accent', rgb);
+        lucide.createIcons();
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        localStorage.setItem('petshop-theme', isLight ? 'light' : 'dark');
+        updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+        const isLight = document.body.classList.contains('light-mode');
+        const iconDesktop = document.getElementById('themeIcon');
+        if (iconDesktop) {
+            iconDesktop.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+        }
+        const iconMobile = document.getElementById('themeIconMobile');
+        if (iconMobile) {
+            iconMobile.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+        }
+        lucide.createIcons();
+    }
+
+    function toggleAdminModal() {
+        const modal = document.getElementById('adminModal');
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+        if (!modal.classList.contains('hidden')) fetchCategories();
+    }
+
+    function toggleProductAdminModal() {
+        const modal = document.getElementById('productAdminModal');
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+        if (!modal.classList.contains('hidden')) { fetchProducts(); loadCategoriesForSelect(); }
+    }
+
+    async function fetchCategories() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            renderHomeCategories(data);
+            renderAdminTable(data);
+            loadCategoriesForSelect();
+        } catch (err) { console.error(err); }
+    }
+
+    async function fetchProducts() {
+        try {
+            const response = await fetch(API_URL_PRODUTOS);
+            if (!response.ok) throw new Error('Fail');
+            allProducts = await response.json();
+            renderProducts(allProducts);
+            renderProductAdminTable(allProducts);
+        } catch (err) { console.error(err); }
+    }
+
+    function renderHomeCategories(categories) {
+        const grid = document.getElementById('quickLinksGrid');
+        const allOption = `
+            <div onclick="renderProducts(allProducts)" class="glass-card p-6 flex flex-col items-center justify-center gap-4 cursor-pointer group hover:border-accent/50 transition-all">
+                <div class="text-accent p-3 bg-accent/10 rounded-xl group-hover:scale-110 transition-transform">
+                    <i data-lucide="layout-grid" class="w-6 h-6"></i>
+                </div>
+                <span class="font-bold text-xs tracking-widest uppercase opacity-70 group-hover:opacity-100">Ver Todos</span>
+            </div>`;
+        grid.innerHTML = allOption + categories.map(cat => `
+            <div onclick="filterProductsByCategory(${cat.idCategoria})" class="glass-card p-6 flex flex-col items-center justify-center gap-4 cursor-pointer group hover:border-accent/50 transition-all">
+                <div class="text-accent p-3 bg-accent/10 rounded-xl group-hover:scale-110 transition-transform">
+                    <i data-lucide="${cat.icone || 'package'}" class="w-6 h-6"></i>
+                </div>
+                <span class="font-bold text-xs tracking-widest uppercase opacity-70 group-hover:opacity-100">${cat.nome}</span>
+            </div>`).join('');
+        lucide.createIcons();
+    }
+
+    function filterProductsByCategory(categoryId) {
+        const filtered = allProducts.filter(p => p.categoria && p.categoria.idCategoria === categoryId);
+        renderProducts(filtered);
+        document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderProducts(products) {
+        const grid = document.getElementById('productGrid');
+        if (products.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full py-20 text-center">
+                    <i data-lucide="package-search" class="w-16 h-16 text-gray-500 mx-auto mb-4"></i>
+                    <p class="text-gray-400 text-lg">Nenhum produto encontrado</p>
+                </div>`;
+            lucide.createIcons();
+            return;
+        }
+        grid.innerHTML = products.map(prod => `
+            <div class="glass-card p-5 product-card group relative flex flex-col justify-between cursor-pointer" 
+                 onclick="window.location.href='detalhes.html?id=${prod.idProduto}'">
+                <div class="relative mb-6 overflow-hidden rounded-xl bg-black/40 aspect-square flex items-center justify-center">
+                    <img src="${prod.imagem || 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=300'}" 
+                        class="max-h-40 object-contain group-hover:scale-110 transition-transform duration-500">
+                    ${prod.precoDesconto && prod.preco && prod.precoDesconto < prod.preco ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-2 py-1 rounded-full">PROMO</span>' : ''}
+                </div>
+                <h4 class="text-sm font-bold text-gray-200 line-clamp-1 mb-1">${prod.nome}</h4>
+                <p class="text-[10px] text-gray-500 mb-4 uppercase tracking-tighter italic">${prod.categoria ? prod.categoria.nome : 'Premium Line'}</p>
+                <div class="flex items-center justify-between mt-auto">
+                    <span class="price-font font-bold text-lg text-accent">R$ ${parseFloat(prod.precoDesconto || 0).toFixed(2)}</span>
+                    <button class="bg-white/5 hover:bg-accent p-2 rounded-lg transition-colors text-accent hover:text-white" onclick="event.stopPropagation(); window.location.href='detalhes.html?id=${prod.idProduto}'">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    function renderProductAdminTable(products) {
+        const tableBody = document.getElementById('productTableBody');
+        tableBody.innerHTML = products.map(p => `
+            <tr class="hover:bg-white/5 transition-colors">
+                <td class="py-5 px-8">
+                    <div class="flex items-center gap-3">
+                        <img src="${p.imagem || 'https://via.placeholder.com/50'}" class="w-8 h-8 rounded-lg object-cover">
+                        <span class="font-bold text-gray-300">${p.nome}</span>
+                    </div>
+                </td>
+                <td class="py-5 px-8 text-gray-500 font-medium">${p.categoria ? p.categoria.nome : '-'}</td>
+                <td class="py-5 px-8 price-font text-accent font-bold">R$ ${parseFloat(p.precoDesconto || 0).toFixed(2)}</td>
+                <td class="py-5 px-8 text-center">
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20">${p.qtdEstoque} IN STOCK</span>
+                </td>
+                <td class="py-5 px-8 text-center">
+                    <div class="flex justify-center gap-2">
+                        <button onclick='prepareProductEdit(${JSON.stringify(p)})' class="p-2 text-accent hover:bg-accent/10 rounded-lg"><i data-lucide="edit-3" class="w-4 h-4"></i></button> 
+                        <button onclick="deleteProduct(${p.idProduto})" class="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                </td>
+            </tr>`).join('');
+        lucide.createIcons();
+    }
+
+    function renderAdminTable(categories) {
+        const tableBody = document.getElementById('categoryTableBody');
+        tableBody.innerHTML = categories.map(cat => {
+            const id = cat.idCategoria;
+            return `
+            <tr class="hover:bg-white/5 transition-colors">
+                <td class="py-5 px-8 font-mono text-xs text-accent font-bold">#${id}</td>
+                <td class="py-5 px-8 font-bold text-gray-300">${cat.nome}</td>
+                <td class="py-5 px-8 text-gray-500 text-xs italic">${cat.descricao || '-'}</td>
+                <td class="py-5 px-8 opacity-50"><i data-lucide="${cat.icone || 'package'}" class="w-5 h-5"></i></td>
+                <td class="py-5 px-8 text-center">
+                    <div class="flex justify-center gap-2">
+                        <button onclick="editCategory(${id}, '${cat.nome}', '${cat.descricao || ''}', '${cat.icone}')" class="text-accent p-2">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button> 
+                        <button onclick="deleteCategory(${id})" class="text-rose-500 p-2">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+        lucide.createIcons();
+    }
+
+    async function loadCategoriesForSelect() {
+        const res = await fetch(API_URL);
+        const cats = await res.json();
+        const select = document.getElementById('productCategory');
+        select.innerHTML = cats.map(c => `<option value="${c.idCategoria}">${c.nome}</option>`).join('');
+    }
+
+    // ===== FILTROS AVANÇADOS =====
+    function applyFilters() {
+        let filtered = [...allProducts];
+        
+        const minPrice = parseFloat(document.getElementById('priceMin').value) || 0;
+        const maxPrice = parseFloat(document.getElementById('priceMax').value) || Infinity;
+        filtered = filtered.filter(p => {
+            const price = p.precoDesconto || 0;
+            return price >= minPrice && price <= maxPrice;
+        });
+        
+        if (document.getElementById('promoOnly').checked) {
+            filtered = filtered.filter(p => p.precoDesconto && p.preco && p.precoDesconto < p.preco);
+        }
+        
+        if (document.getElementById('inStockOnly').checked) {
+            filtered = filtered.filter(p => p.qtdEstoque > 0);
+        }
+        
+        const sortValue = document.getElementById('sortSelect').value;
+        switch(sortValue) {
+            case 'price-asc': filtered.sort((a, b) => (a.precoDesconto || 0) - (b.precoDesconto || 0)); break;
+            case 'price-desc': filtered.sort((a, b) => (b.precoDesconto || 0) - (a.precoDesconto || 0)); break;
+            case 'name-asc': filtered.sort((a, b) => a.nome.localeCompare(b.nome)); break;
+            case 'name-desc': filtered.sort((a, b) => b.nome.localeCompare(a.nome)); break;
+            case 'stock-desc': filtered.sort((a, b) => (b.qtdEstoque || 0) - (a.qtdEstoque || 0)); break;
+        }
+        
+        renderProducts(filtered);
+        document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function clearFilters() {
+        document.getElementById('sortSelect').value = 'default';
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        document.getElementById('promoOnly').checked = false;
+        document.getElementById('inStockOnly').checked = false;
+        renderProducts(allProducts);
+    }
+
+    // ===== BUSCA =====
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        if (query === '') { renderProducts(allProducts); return; }
+        const filtered = allProducts.filter(p => 
+            p.nome.toLowerCase().includes(query) ||
+            (p.categoria && p.categoria.nome.toLowerCase().includes(query))
+        );
+        renderProducts(filtered);
+    });
+
+    // Busca mobile
+    document.getElementById('searchInputMobile').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        if (query === '') { renderProducts(allProducts); return; }
+        const filtered = allProducts.filter(p => 
+            p.nome.toLowerCase().includes(query) ||
+            (p.categoria && p.categoria.nome.toLowerCase().includes(query))
+        );
+        renderProducts(filtered);
+    });
+
+    // ===== VALIDAÇÕES =====
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearErrors();
+        let valid = true;
+        
+        if (!document.getElementById('categoryName').value.trim()) {
+            showFieldError('categoryName', 'categoryNameError');
+            valid = false;
+        }
+        if (!valid) return;
+        
+        showLoading('submitBtnText', 'submitBtnSpinner');
+        const id = document.getElementById('categoryId').value;
+        const categoria = {
+            nome: document.getElementById('categoryName').value,
+            descricao: document.getElementById('categoryDesc').value,
+            icone: document.getElementById('categoryIcon').value,
+            ativo: true
+        };
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/${id}` : API_URL;
+        if(id) categoria.idCategoria = parseInt(id);
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(categoria)
+            });
+            if (response.ok) { 
+                resetForm(); 
+                fetchCategories(); 
+                showToast('Categoria salva com sucesso! ✅');
+            }
+        } catch (err) { 
+            console.error(err); 
+            showToast('Erro ao salvar categoria ❌', 'error');
+        } finally {
+            hideLoading('submitBtnText', 'submitBtnSpinner');
+        }
+    });
+
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearErrors();
+        let valid = true;
+        
+        if (!document.getElementById('productName').value.trim()) { showFieldError('productName', 'productNameError'); valid = false; }
+        if (!document.getElementById('productCategory').value) { showFieldError('productCategory', 'productCategoryError'); valid = false; }
+        if (!document.getElementById('productStock').value) { showFieldError('productStock', 'productStockError'); valid = false; }
+        if (!document.getElementById('productPrice').value) { showFieldError('productPrice', 'productPriceError'); valid = false; }
+        if (!document.getElementById('productDiscountPrice').value) { showFieldError('productDiscountPrice', 'productDiscountError'); valid = false; }
+        if (!valid) return;
+        
+        showLoading('productSubmitBtnText', 'productSubmitBtnSpinner');
+        const id = document.getElementById('productId').value;
+        const product = {
+            nome: document.getElementById('productName').value,
+            preco: parseFloat(document.getElementById('productPrice').value),
+            precoDesconto: parseFloat(document.getElementById('productDiscountPrice').value),
+            qtdEstoque: parseInt(document.getElementById('productStock').value),
+            imagem: document.getElementById('productImage').value,
+            ativo: true,
+            categoria: { idCategoria: parseInt(document.getElementById('productCategory').value) }
+        };
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL_PRODUTOS}/${id}` : API_URL_PRODUTOS;
+        if(id) product.idProduto = parseInt(id);
+
+        try {
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            });
+            if(res.ok) { 
+                resetProductForm(); 
+                fetchProducts(); 
+                showToast('Produto salvo com sucesso! ✅');
+            }
+        } catch (err) { 
+            console.error(err); 
+            showToast('Erro ao salvar produto ❌', 'error');
+        } finally {
+            hideLoading('productSubmitBtnText', 'productSubmitBtnSpinner');
+        }
+    });
+
+    async function deleteCategory(id) {
+        if (confirm('Deseja excluir?')) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (response.ok) { fetchCategories(); showToast('Categoria excluída! ✅'); }
+            } catch (err) { console.error(err); }
+        }
+    }
+
+    async function deleteProduct(id) {
+        if(confirm('Excluir este produto?')) {
+            await fetch(`${API_URL_PRODUTOS}/${id}`, { method: 'DELETE' });
+            fetchProducts();
+            showToast('Produto excluído! ✅');
+        }
+    }
+
+    function editCategory(id, nome, desc, icone) {
+        document.getElementById('categoryId').value = id;
+        document.getElementById('categoryName').value = nome;
+        document.getElementById('categoryDesc').value = desc;
+        document.getElementById('categoryIcon').value = icone || 'package';
+        document.getElementById('submitBtnText').innerText = 'Atualizar';
+    }
+
+    function prepareProductEdit(p) {
+        document.getElementById('productId').value = p.idProduto;
+        document.getElementById('productName').value = p.nome;
+        document.getElementById('productPrice').value = p.preco;
+        document.getElementById('productDiscountPrice').value = p.precoDesconto;
+        document.getElementById('productStock').value = p.qtdEstoque;
+        document.getElementById('productImage').value = p.imagem;
+        document.getElementById('productCategory').value = p.categoria.idCategoria;
+        document.getElementById('productSubmitBtnText').innerText = 'Atualizar';
+    }
+
+    function resetForm() {
+        document.getElementById('categoryForm').reset();
+        document.getElementById('categoryId').value = '';
+        document.getElementById('submitBtnText').innerText = 'Salvar';
+        clearErrors();
+    }
+
+    function resetProductForm() {
+        document.getElementById('productForm').reset();
+        document.getElementById('productId').value = '';
+        document.getElementById('productSubmitBtnText').innerText = 'Salvar';
+        clearErrors();
+    }
+
+    // ===== INICIALIZAÇÃO =====
+    document.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('petshop-theme') === 'light') {
+            document.body.classList.add('light-mode');
+            updateThemeIcon();
+        }
+        const savedAccent = localStorage.getItem('petshop-accent');
+        if (savedAccent) { setAccent(savedAccent); }
+        fetchCategories();
+        fetchProducts();
+    });
+    </script>
+</body>
+</html>
+
+
+-------------------------------------------------------------------------------
+DETALHES
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Meta tags dinâmicas -->
+    <meta name="description" content="Confira detalhes do produto no TG Petshop - O melhor para seu melhor amigo.">
+    <meta property="og:title" content="Detalhes do Produto - TG Petshop">
+    <meta property="og:description" content="Produtos premium para seu pet com os melhores preços.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600">
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="TG Petshop">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>Detalhes do Produto - TG Petshop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: 'rgba(var(--accent-rgb), <alpha-value>)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-rgb: 0, 160, 228;
+            --border: rgba(0, 0, 0, 0.05);
+        }
+        
+        body.light-mode {
+            --bg-main: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .glass-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+        }
+        
+        .price-font {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: rgb(var(--accent-rgb));
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        button, .accent-bg {
+            background-color: rgba(var(--accent-rgb), 1);
+        }
+        
+        .text-accent {
+            color: rgb(var(--accent-rgb));
+        }
+        
+        .bg-accent\/10 {
+            background-color: rgba(var(--accent-rgb), 0.1);
+        }
+        
+        .hover\:bg-accent\/10:hover {
+            background-color: rgba(var(--accent-rgb), 0.1);
+        }
+        
+        .border-accent\/50 {
+            border-color: rgba(var(--accent-rgb), 0.5);
+        }
+        
+        .toast {
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-10">
+    
+    <!-- Header com controles de tema -->
+    <header class="mb-8 flex items-center justify-between flex-wrap gap-4">
+        <a href="index.html" class="flex items-center gap-2 text-accent hover:underline">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            <span class="text-sm font-bold">Voltar à Loja</span>
+        </a>
+        
+        <div class="flex items-center gap-4">
+            <!-- Seletor de cores -->
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-accent/5 rounded-full border border-accent/10">
+                <button onclick="setAccent('124, 58, 237')" class="w-3.5 h-3.5 rounded-full bg-[#7c3aed]" title="Roxo"></button>
+                <button onclick="setAccent('37, 99, 235')" class="w-3.5 h-3.5 rounded-full bg-[#2563eb]" title="Azul"></button>
+                <button onclick="setAccent('16, 185, 129')" class="w-3.5 h-3.5 rounded-full bg-[#10b981]" title="Verde"></button>
+                <button onclick="setAccent('0, 160, 228')" class="w-3.5 h-3.5 rounded-full bg-[#00a0e4]" title="Azul Petz"></button>
+            </div>
+            
+            <!-- Botão tema escuro/claro -->
+            <button onclick="toggleTheme()" class="p-2 rounded-xl hover:bg-accent/10 transition-colors" title="Alternar Tema">
+                <i id="themeIcon" data-lucide="sun" class="w-5 h-5 text-accent"></i>
+            </button>
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                <i data-lucide="dog" class="text-accent w-8 h-8"></i>
+                <span class="text-xl font-black uppercase italic">TG<span class="text-accent">Petshop</span></span>
+            </div>
+        </div>
+    </header>
+
+    <main id="productDetail" class="max-w-4xl mx-auto">
+        <div class="flex flex-col items-center justify-center py-20 text-gray-500">
+            <div class="spinner mb-4"></div>
+            <p>Carregando informações do produto...</p>
+        </div>
+    </main>
+
+    <script>
+        // ===== INICIALIZAÇÃO DO TEMA =====
+        function initTheme() {
+            // Carregar tema
+            const savedTheme = localStorage.getItem('petshop-theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+            
+            // Carregar cor
+            const savedAccent = localStorage.getItem('petshop-accent');
+            if (savedAccent) {
+                document.documentElement.style.setProperty('--accent-rgb', savedAccent);
+            }
+            
+            updateThemeIcon();
+        }
+        
+        function setAccent(rgb) {
+            document.documentElement.style.setProperty('--accent-rgb', rgb);
+            localStorage.setItem('petshop-accent', rgb);
+            lucide.createIcons();
+        }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('petshop-theme', isLight ? 'light' : 'dark');
+            updateThemeIcon();
+        }
+        
+        function updateThemeIcon() {
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                const isLight = document.body.classList.contains('light-mode');
+                icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+                lucide.createIcons();
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast fixed bottom-5 right-5 px-6 py-3 rounded-xl text-white text-sm font-bold z-[200] ${
+                type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
+            }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Inicializar tema imediatamente
+        initTheme();
+        lucide.createIcons();
+        
+        // ===== CARREGAR PRODUTO =====
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        if (!productId) {
+            document.getElementById('productDetail').innerHTML = `
+                <div class="glass-card p-10 text-center">
+                    <i data-lucide="alert-circle" class="w-16 h-16 text-red-400 mx-auto mb-4"></i>
+                    <h2 class="text-2xl font-bold text-red-400 mb-2">Produto não especificado</h2>
+                    <p class="text-gray-400">Nenhum ID de produto foi fornecido na URL.</p>
+                    <a href="index.html" class="inline-block mt-4 bg-accent text-white px-6 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition-all">Voltar à loja</a>
+                </div>`;
+            lucide.createIcons();
+        } else {
+            fetch(`http://localhost:8080/api/produtos/${productId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Produto não encontrado');
+                    return response.json();
+                })
+                .then(product => {
+                    updateMetaTags(product);
+                    renderProductDetail(product);
+                })
+                .catch(error => {
+                    document.getElementById('productDetail').innerHTML = `
+                        <div class="glass-card p-10 text-center">
+                            <i data-lucide="frown" class="w-16 h-16 text-red-400 mx-auto mb-4"></i>
+                            <h2 class="text-2xl font-bold text-red-400 mb-2">Erro</h2>
+                            <p class="text-gray-400">${error.message}</p>
+                            <a href="index.html" class="inline-block mt-4 bg-accent text-white px-6 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition-all">Voltar à loja</a>
+                        </div>`;
+                    lucide.createIcons();
+                });
+        }
+
+        function updateMetaTags(product) {
+            const price = parseFloat(product.precoDesconto || 0).toFixed(2);
+            document.title = `${product.nome} - TG Petshop`;
+            
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) metaDesc.setAttribute('content', `${product.nome} - R$ ${price} | ${product.categoria ? product.categoria.nome : 'Premium'} | TG Petshop`);
+            
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle) ogTitle.setAttribute('content', `${product.nome} - TG Petshop`);
+            
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            if (ogDesc) ogDesc.setAttribute('content', `${product.nome} por apenas R$ ${price}. Aproveite!`);
+            
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            if (ogImage) ogImage.setAttribute('content', product.imagem || 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600');
+        }
+
+        function renderProductDetail(product) {
+            const price = parseFloat(product.precoDesconto || 0).toFixed(2);
+            const originalPrice = product.preco ? parseFloat(product.preco).toFixed(2) : null;
+            const inStock = product.qtdEstoque > 0;
+            const stockMessage = inStock
+                ? `${product.qtdEstoque} unidade(s) em estoque`
+                : 'Indisponível no momento';
+            const hasDiscount = product.precoDesconto && product.preco && product.precoDesconto < product.preco;
+
+            const html = `
+                <div class="glass-card p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Imagem do produto -->
+                    <div class="bg-black/20 rounded-2xl overflow-hidden flex items-center justify-center p-6 relative">
+                        <img src="${product.imagem || 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600'}" 
+                             alt="${product.nome}" class="max-h-80 object-contain rounded-xl">
+                        ${hasDiscount ? '<span class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">OFERTA</span>' : ''}
+                    </div>
+                    
+                    <!-- Detalhes do produto -->
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <span class="text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-2 block">
+                                ${product.categoria ? product.categoria.nome : 'Premium Line'}
+                            </span>
+                            <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style="color: var(--text-main);">${product.nome}</h1>
+                            
+                            <!-- Preços -->
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="price-font font-bold text-4xl text-accent">R$ ${price}</span>
+                                ${originalPrice && originalPrice !== price ? `<span class="text-gray-500 line-through text-xl">R$ ${originalPrice}</span>` : ''}
+                                ${hasDiscount ? '<span class="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-1 rounded-full">Em oferta</span>' : ''}
+                            </div>
+                            
+                            <!-- Status do estoque -->
+                            <div class="mb-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold border ${
+                                    inStock 
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                                    : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                }">
+                                    ${inStock ? 'EM ESTOQUE' : 'ESGOTADO'}
+                                </span>
+                                <p class="text-sm mt-2" style="color: var(--text-muted);">${stockMessage}</p>
+                            </div>
+
+                            <!-- Descrição -->
+                            <p class="text-sm leading-relaxed mb-6" style="color: var(--text-muted);">
+                                ${product.descricao || 'Produto premium selecionado para seu pet. Consulte mais informações na embalagem.'}
+                            </p>
+                        </div>
+                        
+                        <!-- Botões de ação -->
+                        <div class="flex gap-3">
+                            <button onclick="addToCart(${product.idProduto})" 
+                                    class="flex-1 bg-accent hover:opacity-90 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-xl shadow-accent/20 text-xs uppercase tracking-widest ${
+                                        !inStock ? 'opacity-50 cursor-not-allowed' : ''
+                                    }" 
+                                    ${!inStock ? 'disabled' : ''}>
+                                <i data-lucide="shopping-cart" class="w-4 h-4 inline mr-2"></i> 
+                                ${inStock ? 'Adicionar ao Carrinho' : 'Indisponível'}
+                            </button>
+                            <button onclick="addToFavorites(${product.idProduto})" 
+                                    class="bg-white/5 hover:bg-white/10 font-bold py-3.5 px-6 rounded-2xl transition-all text-xs uppercase tracking-widest border border-white/5">
+                                <i data-lucide="heart" class="w-4 h-4 inline mr-2"></i> Favorito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('productDetail').innerHTML = html;
+            lucide.createIcons();
+        }
+        
+        // Funções placeholder para carrinho e favoritos
+        function addToCart(productId) {
+            showToast('Produto adicionado ao carrinho! 🛒', 'success');
+            // Implementar lógica do carrinho aqui
+        }
+        
+        function addToFavorites(productId) {
+            showToast('Produto adicionado aos favoritos! ❤️', 'success');
+            // Implementar lógica de favoritos aqui
+        }
+    </script>
+</body>
+</html>
+
+
+-----------------------------------------------------------------------------------------
+
