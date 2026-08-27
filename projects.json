@@ -1,0 +1,78 @@
+[
+  {
+    "id": "todo-dashboard",
+    "title": "Dashboard To-Do List",
+    "category": "javascript",
+    "problem": "Preciso de uma ferramenta simples para organizar tarefas do dia a dia sem depender de apps pesados, com dados salvos mesmo após fechar o navegador.",
+    "stack": ["HTML5", "CSS3", "JavaScript", "localStorage"],
+    "ux": {
+      "layout": "Layout de duas colunas no desktop (formulário + lista) que colapsa para uma coluna única no mobile, priorizando a lista de tarefas acima do formulário de adição.",
+      "wireframe": "Wireframe inicial em baixa fidelidade no papel, depois refinado no Figma testando dois formatos de card de tarefa antes de escolher o mais escaneável.",
+      "acessibilidade": "Checkboxes com foco visível, anúncio via aria-live ao concluir/remover tarefas e contraste mínimo de 4.5:1 no tema claro e escuro."
+    },
+    "highlights": [
+      "Sincronização de estado entre a interface e o localStorage sem recarregar a página.",
+      "Alternância de tema claro/escuro persistida entre sessões.",
+      "Tratamento de estado vazio quando todas as tarefas são concluídas ou removidas."
+    ],
+    "repo": "https://github.com/SEU-USUARIO/todo-dashboard",
+    "demo": "https://SEU-USUARIO.github.io/todo-dashboard/"
+  },
+  {
+    "id": "ecostore-landing",
+    "title": "Landing Page — EcoStore",
+    "category": "html-css",
+    "problem": "Loja fictícia de produtos sustentáveis precisava de uma landing page responsiva focada em conversão, sem framework, para validar a proposta com poucos recursos.",
+    "stack": ["HTML5", "CSS3", "Grid", "Flexbox"],
+    "ux": {
+      "layout": "Hero com CTA único acima da dobra, seção de benefícios em grid de 3 colunas que empilha em telas pequenas, prova social logo abaixo do hero.",
+      "wireframe": "Baseado em um wireframe de referência adaptado no Figma, priorizando hierarquia visual clara entre título, subtítulo e CTA.",
+      "acessibilidade": "Uso de landmarks semânticos (header, main, section, footer), texto alternativo descritivo em todas as imagens e ordem de tabulação lógica."
+    },
+    "highlights": [
+      "Grid responsivo construído sem nenhuma linha de media query redundante, usando minmax() e auto-fit.",
+      "Otimização de carregamento com imagens em formato WebP e lazy loading nativo.",
+      "Testado manualmente em 320px, 768px, 1024px e 1440px."
+    ],
+    "repo": "https://github.com/SEU-USUARIO/ecostore-landing",
+    "demo": "https://SEU-USUARIO.github.io/ecostore-landing/"
+  },
+  {
+    "id": "clima-api",
+    "title": "Dashboard de Clima",
+    "category": "api",
+    "problem": "Exercício de consumo de API real: buscar a previsão do tempo por cidade e exibir os dados de forma clara, tratando erros de rede e cidades inexistentes.",
+    "stack": ["JavaScript", "Fetch API", "Async/Await", "CSS3"],
+    "ux": {
+      "layout": "Campo de busca fixo no topo, card de resultado centralizado com hierarquia clara entre temperatura, condição e detalhes secundários.",
+      "wireframe": "Protótipo rápido em papel para decidir a posição do estado de carregamento e da mensagem de erro antes de codar.",
+      "acessibilidade": "Mensagens de erro anunciadas via aria-live, formulário de busca navegável 100% por teclado."
+    },
+    "highlights": [
+      "Uso de async/await com try/catch para lidar com falhas de rede e respostas inválidas da API.",
+      "Debounce na busca para evitar chamadas excessivas à API.",
+      "Estado de carregamento (skeleton) enquanto a requisição está em andamento."
+    ],
+    "repo": "https://github.com/SEU-USUARIO/clima-api",
+    "demo": "https://SEU-USUARIO.github.io/clima-api/"
+  },
+  {
+    "id": "galeria-produtos",
+    "title": "Galeria de Produtos",
+    "category": "html-css",
+    "problem": "Treinar CSS Grid avançado construindo uma galeria de produtos com filtros visuais e cards de tamanhos variados, mantendo o layout estável durante o carregamento.",
+    "stack": ["HTML5", "CSS Grid", "JavaScript"],
+    "ux": {
+      "layout": "Grid assimétrico com item em destaque maior a cada 5 cards, mantendo alinhamento consistente mesmo com alturas de conteúdo diferentes.",
+      "wireframe": "Wireframe testado com conteúdo real (não lorem ipsum) para validar quebras de linha em títulos longos.",
+      "acessibilidade": "Filtros implementados como grupo de botões com aria-pressed, sem depender apenas de cor para indicar o filtro ativo."
+    },
+    "highlights": [
+      "Uso de subgrid para alinhar título, preço e botão entre cards de alturas diferentes.",
+      "Prevenção de layout shift reservando espaço para imagens com aspect-ratio.",
+      "Filtragem client-side sem recarregar a página."
+    ],
+    "repo": "https://github.com/SEU-USUARIO/galeria-produtos",
+    "demo": "https://SEU-USUARIO.github.io/galeria-produtos/"
+  }
+]

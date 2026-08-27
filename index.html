@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thiago — Desenvolvedor Front-end</title>
+  <meta
+    name="description"
+    content="Portfólio de Thiago, desenvolvedor front-end em formação — projetos práticos em HTML5, CSS3 e JavaScript, com foco em acessibilidade e boas práticas de UI/UX."
+  />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f7f5f1" />
+
+  <!-- TODO: troque pelo favicon real do seu domínio -->
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23a8471f'/%3E%3Ctext x='16' y='22' font-size='16' font-family='Georgia,serif' fill='%23fffaf5' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E"
+  />
+
+  <!-- Fontes: pareamento serif (display) + sans (corpo) para fugir do "look" genérico -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Folhas de estilo carregadas em ordem: tokens → base → layout → componentes → utilitários -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/utilities.css" />
+</head>
+<body>
+  <!-- Navegação por teclado: primeiro elemento focável leva direto ao conteúdo -->
+  <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#topo" class="logo">Thiago<span aria-hidden="true">.</span>dev</a>
+
+      <div class="header-actions">
+        <button
+          id="theme-toggle"
+          class="btn-icon theme-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+          </svg>
+          <span class="visually-hidden">Alternar tema claro/escuro</span>
+        </button>
+
+        <button
+          id="nav-toggle"
+          class="btn-icon nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-nav"
+        >
+          <span class="bar" aria-hidden="true"></span>
+          <span class="bar" aria-hidden="true"></span>
+          <span class="bar" aria-hidden="true"></span>
+          <span class="visually-hidden">Abrir menu de navegação</span>
+        </button>
+      </div>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal" data-open="false">
+        <ul>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato">Contato</a></li>
+          <li>
+            <!-- TODO: troque pelo link real do seu currículo em PDF -->
+            <a href="curriculo.pdf" class="btn btn-secondary" download>Baixar CV</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="nav-overlay" id="nav-overlay" data-open="false" hidden></div>
+
+  <main id="conteudo-principal">
+    <!-- ===================== HERO ===================== -->
+    <section id="topo" class="hero container">
+      <div class="hero-copy flow">
+        <p class="hero-kicker">Desenvolvedor Front-end · Disponível para estágio/júnior</p>
+        <h1>Construo interfaces acessíveis, rápidas e bem pensadas.</h1>
+        <p class="hero-lead">
+          Sou Thiago, estudante de desenvolvimento Front-end. Este portfólio reúne os
+          projetos práticos do meu curso — cada um documentado com o problema que
+          resolvi, as decisões de UI/UX por trás do layout e os desafios técnicos que
+          superei no caminho.
+        </p>
+        <div class="hero-actions">
+          <a href="#projetos" class="btn btn-primary">Ver projetos</a>
+          <a href="#contato" class="btn btn-secondary">Entrar em contato</a>
+        </div>
+
+        <dl class="hero-meta">
+          <div>
+            <dt>Foco atual</dt>
+            <dd>HTML5, CSS3, JS (ES6+)</dd>
+          </div>
+          <div>
+            <dt>Formação</dt>
+            <dd>Curso de Front-end</dd>
+          </div>
+          <div>
+            <dt>Prioridade</dt>
+            <dd>Acessibilidade (WCAG 2.1 AA)</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <!-- Placeholder visual: substitua por uma foto sua ou ilustração -->
+        <svg viewBox="0 0 320 320" width="100%" role="presentation">
+          <rect x="0" y="0" width="320" height="320" rx="12" fill="var(--color-bg-inset)" />
+          <rect x="32" y="40" width="256" height="18" rx="4" fill="var(--color-border-strong)" />
+          <rect x="32" y="72" width="180" height="12" rx="4" fill="var(--color-border)" />
+          <rect x="32" y="112" width="256" height="140" rx="8" fill="var(--color-bg-elevated)" stroke="var(--color-border)" />
+          <circle cx="70" cy="150" r="14" fill="var(--color-accent)" />
+          <rect x="100" y="142" width="140" height="8" rx="4" fill="var(--color-border-strong)" />
+          <rect x="100" y="160" width="100" height="8" rx="4" fill="var(--color-border)" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===================== SKILLS ===================== -->
+    <section id="skills" class="section" aria-labelledby="skills-heading">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Habilidades</span>
+          <h2 id="skills-heading">O que domino até aqui</h2>
+          <p>
+            Níveis abaixo refletem prática real dentro do curso — atualizo conforme avanço
+            em projetos novos.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <article class="card skill-card">
+            <p class="skill-category">Linguagens</p>
+            <h3>Base da web</h3>
+            <div class="skill-list">
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>HTML5 semântico</span>
+                  <span class="skill-time">8 meses</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: avançado, 85 de 100">
+                  <div class="skill-bar-fill" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>CSS3 (Grid &amp; Flexbox)</span>
+                  <span class="skill-time">8 meses</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: avançado, 80 de 100">
+                  <div class="skill-bar-fill" style="width: 80%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>JavaScript (ES6+)</span>
+                  <span class="skill-time">6 meses</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: intermediário, 65 de 100">
+                  <div class="skill-bar-fill" style="width: 65%"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card skill-card">
+            <p class="skill-category">Frameworks &amp; bibliotecas</p>
+            <h3>Em estudo</h3>
+            <div class="skill-list">
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>React</span>
+                  <span class="skill-time">estudando</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: iniciante, 30 de 100">
+                  <div class="skill-bar-fill" style="width: 30%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>Tailwind CSS</span>
+                  <span class="skill-time">estudando</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: iniciante, 25 de 100">
+                  <div class="skill-bar-fill" style="width: 25%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>Node.js</span>
+                  <span class="skill-time">próximo módulo</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: fundamentos, 15 de 100">
+                  <div class="skill-bar-fill" style="width: 15%"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card skill-card">
+            <p class="skill-category">Ferramentas</p>
+            <h3>Fluxo de trabalho</h3>
+            <div class="skill-list">
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>Git &amp; GitHub</span>
+                  <span class="skill-time">8 meses</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: confortável, 70 de 100">
+                  <div class="skill-bar-fill" style="width: 70%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>Figma</span>
+                  <span class="skill-time">6 meses</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: confortável, 60 de 100">
+                  <div class="skill-bar-fill" style="width: 60%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-item-top">
+                  <span>DevTools &amp; Lighthouse</span>
+                  <span class="skill-time">6 meses</span>
+                </div>
+                <div class="skill-bar" role="img" aria-label="Nível: confortável, 60 de 100">
+                  <div class="skill-bar-fill" style="width: 60%"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PROJETOS ===================== -->
+    <section id="projetos" class="section" aria-labelledby="projetos-heading">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Projetos do curso</span>
+          <h2 id="projetos-heading">Do problema à interface</h2>
+          <p>
+            Cada card documenta o problema resolvido, a stack usada, as decisões de
+            UI/UX e os desafios técnicos superados — não é só uma vitrine de telas.
+          </p>
+        </div>
+
+        <div class="projects-toolbar" role="group" aria-label="Filtrar projetos por tecnologia">
+          <button class="filter-chip" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+          <button class="filter-chip" type="button" data-filter="html-css" aria-pressed="false">HTML/CSS</button>
+          <button class="filter-chip" type="button" data-filter="javascript" aria-pressed="false">JavaScript</button>
+          <button class="filter-chip" type="button" data-filter="api" aria-pressed="false">Consumo de API</button>
+        </div>
+
+        <!--
+          Grid populado via JS (js/modules/projects-render.js) a partir de
+          data/projects.json. Skeletons, estado vazio e estado de erro são
+          gerenciados ali — ver comentários no arquivo para o fluxo completo.
+        -->
+        <div
+          id="projects-grid"
+          class="projects-grid"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+        </div>
+
+        <noscript>
+          <p class="state-panel">
+            Esta seção carrega os projetos dinamicamente e precisa de JavaScript
+            habilitado. Veja o código-fonte completo no
+            <a href="https://github.com/">meu GitHub</a>.
+          </p>
+        </noscript>
+      </div>
+    </section>
+
+    <!-- ===================== SOBRE / TRAJETÓRIA ===================== -->
+    <section id="sobre" class="section" aria-labelledby="sobre-heading">
+      <div class="container about-layout">
+        <div class="flow">
+          <span class="eyebrow">Trajetória</span>
+          <h2 id="sobre-heading">Como cheguei até aqui</h2>
+          <p>
+            Comecei o curso de Front-end sem experiência prévia com código. A metodologia
+            combinou teoria curta seguida de prática imediata: cada módulo terminava em um
+            projeto real, não em exercícios isolados. Isso me obrigou a tomar decisões de
+            design e arquitetura desde cedo — e a aprender debugando meus próprios erros.
+          </p>
+          <p>
+            Hoje priorizo acessibilidade e responsividade como requisitos de primeira
+            classe, não como retrabalho no final. Meu próximo passo é aprofundar
+            JavaScript assíncrono e migrar meus projetos para React.
+          </p>
+        </div>
+
+        <ol class="timeline">
+          <li class="timeline-item">
+            <time datetime="2026-01">Jan 2026</time>
+            <h3>Módulo 1 — HTML5 semântico</h3>
+            <p>Marcação acessível, formulários e fundamentos de SEO.</p>
+          </li>
+          <li class="timeline-item">
+            <time datetime="2026-03">Mar 2026</time>
+            <h3>Módulo 2 — CSS3, Grid &amp; Flexbox</h3>
+            <p>Layouts responsivos mobile-first e sistemas de design com variáveis CSS.</p>
+          </li>
+          <li class="timeline-item">
+            <time datetime="2026-05">Mai 2026</time>
+            <h3>Módulo 3 — JavaScript ES6+</h3>
+            <p>Manipulação de DOM, eventos, localStorage e consumo de APIs com fetch.</p>
+          </li>
+          <li class="timeline-item">
+            <time datetime="2026-08">Ago 2026</time>
+            <h3>Projeto final &amp; portfólio</h3>
+            <p>Consolidação dos projetos práticos neste portfólio.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== CONTATO ===================== -->
+    <section id="contato" class="section" aria-labelledby="contato-heading" style="border-bottom: none;">
+      <div class="container contact-layout">
+        <div class="flow">
+          <span class="eyebrow">Contato</span>
+          <h2 id="contato-heading">Vamos conversar</h2>
+          <p>
+            Estou aberto a oportunidades de estágio ou vaga júnior, freelas pequenos e
+            trocas com outros devs em formação. Responda o formulário ou me encontre nas
+            redes abaixo.
+          </p>
+
+          <ul class="badge-group" aria-label="Redes profissionais">
+            <li>
+              <!-- TODO: troque pelo seu usuário -->
+              <a class="btn btn-secondary" href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                GitHub
+              </a>
+            </li>
+            <li>
+              <!-- TODO: troque pelo seu usuário -->
+              <a class="btn btn-secondary" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">
+                LinkedIn
+              </a>
+            </li>
+            <li>
+              <a class="btn btn-secondary" href="mailto:seuemail@exemplo.com">E-mail</a>
+            </li>
+          </ul>
+        </div>
+
+        <form id="contact-form" class="card" novalidate>
+          <h3 class="visually-hidden">Formulário de contato</h3>
+
+          <div class="form-field">
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-error" />
+            <span class="form-error" id="name-error" role="alert">Informe seu nome.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-error" />
+            <span class="form-error" id="email-error" role="alert">Informe um e-mail válido.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="message">Mensagem</label>
+            <textarea id="message" name="message" required minlength="10" aria-describedby="message-error"></textarea>
+            <span class="hint">Mínimo de 10 caracteres.</span>
+            <span class="form-error" id="message-error" role="alert">Escreva uma mensagem com pelo menos 10 caracteres.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Enviar mensagem</button>
+
+          <p class="form-status" id="form-status" role="status" aria-live="polite" data-visible="false"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Thiago — construído com HTML, CSS e JavaScript puro.</p>
+      <p>Código aberto no <a href="https://github.com/">GitHub</a>.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
